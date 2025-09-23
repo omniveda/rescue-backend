@@ -7,6 +7,9 @@ const router = express.Router();
 // Get all incident reports (admin only)
 router.get('/', authenticateToken, async (req, res) => {
   try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Access denied. Admin role required.' });
+    }
     const reports = await IncidentReport.find()
       .populate('submittedBy', 'username email')
       .populate('assignedTo', 'username email')

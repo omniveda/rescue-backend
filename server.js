@@ -30,6 +30,7 @@ import damageReportRoutes from './routes/damageReports.js';
 import resourceRequestRoutes from './routes/resourceRequests.js';
 import donationRoutes from './routes/donations.js';
 import mentalHealthSupportRoutes from './routes/mentalHealthSupport.js';
+import dashboardRoutes from './routes/dashboard.js';
 
 // Basic route
 app.get('/', (req, res) => {
@@ -44,6 +45,7 @@ app.use('/api/damage-reports', damageReportRoutes);
 app.use('/api/resource-requests', resourceRequestRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/mental-health-support', mentalHealthSupportRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Start server
 app.listen(PORT, () => {
