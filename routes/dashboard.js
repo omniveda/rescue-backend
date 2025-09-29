@@ -2,17 +2,13 @@ import express from 'express';
 import User from '../models/User.js';
 import IncidentReport from '../models/IncidentReport.js';
 import ResourceRequest from '../models/ResourceRequest.js';
-import { authenticateToken } from './auth.js';
+import { authenticateToken, authorizeRoles } from './auth.js';
 
 const router = express.Router();
 
 // Get dashboard stats (admin only)
-router.get('/stats', authenticateToken, async (req, res) => {
+router.get('/stats', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Access denied. Admin role required.' });
-    }
-
     const stats = {
       activeIncidents: await IncidentReport.countDocuments({ status: { $in: ['active', 'responding'] } }),
       totalUsers: await User.countDocuments(),
@@ -27,12 +23,8 @@ router.get('/stats', authenticateToken, async (req, res) => {
 });
 
 // Get all incidents for admin dashboard
-router.get('/incidents', authenticateToken, async (req, res) => {
+router.get('/incidents', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Access denied. Admin role required.' });
-    }
-
     const incidents = await IncidentReport.find()
       .populate('submittedBy', 'username email')
       .populate('assignedTo', 'username email')
@@ -46,12 +38,8 @@ router.get('/incidents', authenticateToken, async (req, res) => {
 });
 
 // Get all users for admin dashboard
-router.get('/users', authenticateToken, async (req, res) => {
+router.get('/users', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Access denied. Admin role required.' });
-    }
-
     const users = await User.find()
       .select('username email role createdAt')
       .sort({ createdAt: -1 })
@@ -64,12 +52,8 @@ router.get('/users', authenticateToken, async (req, res) => {
 });
 
 // Get all resource requests for admin dashboard
-router.get('/resources', authenticateToken, async (req, res) => {
+router.get('/resources', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Access denied. Admin role required.' });
-    }
-
     const resources = await ResourceRequest.find()
       .populate('submittedBy', 'username email')
       .sort({ createdAt: -1 })

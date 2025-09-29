@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   fullName: { type: String },
   phone: { type: String },
-  role: { type: String, enum: ['citizen', 'volunteer', 'emergency_responder', 'admin', 'medical_staff', 'logistics_coordinator'], default: 'citizen' },
+  role: { type: String, enum: ['citizen', 'volunteer', 'emergency_responder', 'admin', 'medical_staff', 'logistics_coordinator', 'donor', 'system_auditor', 'incident_manager', 'shelter_manager', 'communication_officer'], default: 'citizen' },
   organization: { type: String },
   mfaEnabled: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },

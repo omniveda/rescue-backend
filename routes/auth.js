@@ -24,6 +24,23 @@ export const authenticateToken = (req, res, next) => {
   });
 };
 
+// Middleware to authorize specific roles
+export const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({
+        message: `Access denied. Required roles: ${allowedRoles.join(', ')}`
+      });
+    }
+
+    next();
+  };
+};
+
 // Register new user
 router.post('/register', async (req, res) => {
   const { username, email, password, fullName, phone, role, organization, mfaEnabled } = req.body;
