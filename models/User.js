@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['citizen', 'volunteer', 'emergency_responder', 'admin', 'medical_staff', 'logistics_coordinator', 'donor', 'system_auditor', 'incident_manager', 'shelter_manager', 'communication_officer'], default: 'citizen' },
   organization: { type: String },
   mfaEnabled: { type: Boolean, default: false },
+  skills: [{ type: String }],
+  availability: { type: String },
+  emergencyContact: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 

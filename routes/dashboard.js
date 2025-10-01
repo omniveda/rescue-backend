@@ -6,11 +6,11 @@ import { authenticateToken, authorizeRoles } from './auth.js';
 
 const router = express.Router();
 
-// Get dashboard stats (admin only)
-router.get('/stats', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+// Get dashboard stats (admin and volunteer)
+router.get('/stats', authenticateToken, authorizeRoles('admin', 'volunteer'), async (req, res) => {
   try {
     const stats = {
-      activeIncidents: await IncidentReport.countDocuments({ status: { $in: ['active', 'responding'] } }),
+      activeIncidents: await IncidentReport.countDocuments({ status: { $in: ['pending', 'in-progress'] } }),
       totalUsers: await User.countDocuments(),
       totalResources: await ResourceRequest.countDocuments(),
       activeVolunteers: await User.countDocuments({ role: { $in: ['volunteer', 'emergency_responder'] } })
@@ -22,8 +22,8 @@ router.get('/stats', authenticateToken, authorizeRoles('admin'), async (req, res
   }
 });
 
-// Get all incidents for admin dashboard
-router.get('/incidents', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+// Get all incidents for dashboard (admin and volunteer)
+router.get('/incidents', authenticateToken, authorizeRoles('admin', 'volunteer'), async (req, res) => {
   try {
     const incidents = await IncidentReport.find()
       .populate('submittedBy', 'username email')
